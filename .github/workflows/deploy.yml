@@ -33,6 +33,12 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    # deploy-pages requires the github-pages environment: the Pages service
+    # validates the OIDC token's environment claim and rejects the deployment
+    # without it ("Deployment failed, try again later").
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
