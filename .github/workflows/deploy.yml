@@ -1,11 +1,8 @@
 name: Deploy to GitHub Pages
 
-# Note: the github-pages environment only allows deploys from the repo's
-# default branch. Both branches are listed so deploys work whether the
-# default stays claude/piano-note-visualizer-1zbsga or moves to main.
 on:
   push:
-    branches: [main, claude/piano-note-visualizer-1zbsga]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
