@@ -205,6 +205,36 @@ body {
   margin: 8px 0 20px;
 }
 
+.dropzone-examples {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.dropzone-or {
+  color: var(--muted);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.btn-example {
+  font-size: 14.5px;
+  padding: 9px 18px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  border-color: transparent;
+  color: var(--text);
+}
+
+.btn-example:hover {
+  border-color: var(--accent);
+}
+
 .dropzone-error {
   color: #ff8a8a;
   background: rgba(255, 80, 80, 0.12);

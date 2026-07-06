@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useAppStore } from '../app/store';
-import { openFile } from '../app/loadFlow';
+import { openExample, openFile } from '../app/loadFlow';
+import { EXAMPLES } from '../app/examples';
 
 /** Hero empty-state with a drop target and file picker. */
 export function UploadDropzone() {
@@ -25,6 +26,21 @@ export function UploadDropzone() {
         </p>
         {loadStatus === 'error' && errorMessage && <p className="dropzone-error">{errorMessage}</p>}
         <button className="btn btn-primary btn-large">Choose a file</button>
+        <div className="dropzone-examples">
+          <span className="dropzone-or">or try an example</span>
+          {EXAMPLES.map((ex) => (
+            <button
+              key={ex.id}
+              className="btn btn-example"
+              onClick={(e) => {
+                e.stopPropagation(); // don't open the file picker underneath
+                void openExample(ex);
+              }}
+            >
+              ♪ {ex.title}
+            </button>
+          ))}
+        </div>
       </div>
       <input
         ref={inputRef}

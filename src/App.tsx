@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppStore } from './app/store';
-import { openFile } from './app/loadFlow';
+import { openFile, openFromUrl } from './app/loadFlow';
 import { ScoreView } from './components/ScoreView';
 import { ExplanationPanel } from './components/ExplanationPanel';
 import { PianoKeyboard } from './components/PianoKeyboard';
@@ -24,6 +24,11 @@ export default function App() {
     setDragging(false);
     const file = e.dataTransfer?.files?.[0];
     if (file) void openFile(file);
+  }, []);
+
+  // Load a shared example when the URL names one (?piece=…).
+  useEffect(() => {
+    void openFromUrl();
   }, []);
 
   useEffect(() => {
