@@ -5,6 +5,10 @@ import type { Audience, ExplainSection } from '../explain';
 
 export type LoadStatus = 'idle' | 'loading' | 'ready' | 'error';
 export type PlayState = 'stopped' | 'playing' | 'paused';
+export type AppView = 'score' | 'learn' | 'cheatsheet';
+export type KeyboardSize = 's' | 'm' | 'l' | 'focus';
+export type InputStatus = 'off' | 'midi' | 'mic';
+export type PracticeState = 'off' | 'waiting' | 'done';
 
 export interface AppState {
   loadStatus: LoadStatus;
@@ -29,6 +33,23 @@ export interface AppState {
   sheetExpanded: boolean;
   zoom: number;
 
+  view: AppView;
+  keyboardSize: KeyboardSize;
+  /** Real-piano input (Web MIDI / microphone) */
+  inputStatus: InputStatus;
+  inputDeviceName: string | null;
+  /** Last note received from the real piano (for UI feedback) */
+  lastInputMidi: number | null;
+  practice: {
+    state: PracticeState;
+    stepIndex: number;
+    totalSteps: number;
+    correct: number;
+    wrong: number;
+    /** MIDI numbers still needed to complete the current step */
+    expectedMidis: number[];
+  };
+
   set: (partial: Partial<AppState>) => void;
   reset: () => void;
 }
@@ -50,6 +71,19 @@ const initial = {
   activeMidis: [],
   sheetExpanded: false,
   zoom: 1,
+  view: 'score' as AppView,
+  keyboardSize: 'm' as KeyboardSize,
+  inputStatus: 'off' as InputStatus,
+  inputDeviceName: null,
+  lastInputMidi: null,
+  practice: {
+    state: 'off' as PracticeState,
+    stepIndex: 0,
+    totalSteps: 0,
+    correct: 0,
+    wrong: 0,
+    expectedMidis: [],
+  },
 };
 
 export const useAppStore = create<AppState>((set) => ({

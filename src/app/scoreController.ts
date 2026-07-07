@@ -8,6 +8,7 @@ import { analyzeMoment } from '../lib/theory/analyze';
 import { explainSelection } from '../explain';
 import { PlaybackController } from '../lib/audio/playback';
 import { playNow } from '../lib/audio/samplerEngine';
+import { practiceController } from '../lib/practice/practiceController';
 import { useAppStore } from './store';
 
 /**
@@ -237,10 +238,32 @@ class ScoreController {
     });
   }
 
+  // ----- Practice (play-along judge) -----
+
+  startPractice(): void {
+    if (!this.osmd || !this.timeline) return;
+    this.stop();
+    const timeline = this.timeline;
+    practiceController.start(this.osmd, timeline, (i) => [
+      ...new Set(timeline.steps[i]?.notesToPlay.map((n) => n.midi) ?? []),
+    ]);
+  }
+
+  stopPractice(): void {
+    practiceController.stop();
+    useAppStore.getState().set({ chordMidis: [], practice: { ...useAppStore.getState().practice, state: 'off', expectedMidis: [] } });
+    try {
+      this.osmd?.cursor?.hide();
+    } catch {
+      /* ignore */
+    }
+  }
+
   // ----- Playback -----
 
   async play(): Promise<void> {
     if (!this.osmd || !this.timeline) return;
+    if (practiceController.active) this.stopPractice();
     const store = useAppStore.getState();
     if (this.playback.state === 'stopped') {
       this.cursorStep = -1;

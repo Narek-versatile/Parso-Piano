@@ -94,6 +94,10 @@ body {
   position: relative;
 }
 
+.main[hidden] {
+  display: none;
+}
+
 .score-column {
   flex: 1 1 auto;
   min-width: 0;
@@ -568,6 +572,770 @@ body {
   user-select: none;
 }
 
+/* ---------- View tabs ---------- */
+.view-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 3px;
+}
+
+.view-tabs button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13.5px;
+  padding: 6px 14px;
+  border-radius: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.view-tabs .tab-active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.main-page {
+  overflow-y: auto;
+  display: block;
+  background: var(--bg);
+}
+
+/* ---------- Focus mode: huge keyboard, thin score ---------- */
+.app-focus .score-area {
+  max-height: 32dvh;
+}
+
+.app-focus.view-score .panel {
+  display: none;
+}
+
+/* ---------- Input select & practice ---------- */
+.input-select {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.input-select select,
+.kb-size-select {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.input-live-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #37d67a;
+  box-shadow: 0 0 6px #37d67a;
+}
+
+.input-error {
+  color: #ff8a8a;
+  font-size: 12px;
+  max-width: 220px;
+}
+
+.btn-practice {
+  border-color: #37d67a;
+  color: #7fe8ab;
+}
+
+.btn-danger {
+  border-color: #ff6b6b;
+  color: #ff9a9a;
+}
+
+.practice-bar {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 13.5px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  max-width: 94%;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.practice-done {
+  border-color: #37d67a;
+}
+
+.practice-expected {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.score-column {
+  position: relative;
+}
+
+.kb-correct {
+  fill: #37d67a !important;
+}
+
+.kb-wrong {
+  fill: #ff6b6b !important;
+}
+
+/* ---------- Learn: stats & skill tree ---------- */
+.learn-home {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 18px 14px 60px;
+}
+
+.learn-stats {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.stat-pill {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.tree-unit {
+  margin-bottom: 26px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg-2);
+}
+
+.unit-locked {
+  opacity: 0.55;
+}
+
+.unit-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: color-mix(in srgb, var(--unit-color) 18%, var(--bg-2));
+  border-bottom: 1px solid var(--line);
+}
+
+.unit-icon {
+  font-size: 30px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: var(--unit-color);
+  color: #fff;
+  border-radius: 12px;
+}
+
+.unit-head h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.unit-progress {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.unit-lock {
+  margin-left: auto;
+  font-size: 20px;
+}
+
+.unit-lessons {
+  display: flex;
+  flex-direction: column;
+}
+
+.lesson-node {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lesson-node:last-child {
+  border-bottom: 0;
+}
+
+.lesson-node:not(:disabled):hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.lesson-node:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.node-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  flex: 0 0 auto;
+  background: var(--bg);
+  border: 2px solid var(--line);
+}
+
+.node-done .node-circle {
+  background: var(--unit-color);
+  border-color: var(--unit-color);
+  color: #fff;
+}
+
+.node-available .node-circle {
+  border-color: var(--unit-color);
+  color: var(--unit-color);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--unit-color) 25%, transparent);
+}
+
+.node-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.node-title {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.node-blurb {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* ---------- Lesson runner ---------- */
+.runner {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - var(--topbar-h));
+}
+
+.runner-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.runner-close {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.runner-bar {
+  flex: 1;
+  height: 12px;
+  background: var(--bg-2);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.runner-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #a58bff);
+  border-radius: 999px;
+  transition: width 0.3s;
+}
+
+.runner-hearts {
+  font-size: 13px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.runner-body {
+  flex: 1;
+}
+
+.tip-card,
+.exercise {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 22px;
+}
+
+.tip-card h2 {
+  margin: 0 0 10px;
+  font-size: 19px;
+}
+
+.tip-card p {
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+.tip-glyphs {
+  font-size: 22px;
+  text-align: center;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 10px;
+  margin: 12px 0;
+  letter-spacing: 2px;
+}
+
+.tip-staff {
+  background: var(--score-bg);
+  border-radius: 10px;
+  padding: 8px;
+  margin: 12px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.tip-card .btn {
+  margin-top: 14px;
+  width: 100%;
+}
+
+.exercise-prompt {
+  margin: 0 0 14px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.exercise-staff {
+  background: var(--score-bg);
+  border-radius: 10px;
+  padding: 8px;
+  margin: 0 auto 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.chips-column {
+  flex-direction: column;
+}
+
+.chip {
+  background: var(--bg);
+  border: 2px solid var(--line);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 12px 22px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.chips-column .chip {
+  text-align: left;
+  font-size: 14.5px;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+}
+
+.chip-correct {
+  border-color: #37d67a !important;
+  background: rgba(55, 214, 122, 0.12) !important;
+}
+
+.chip-wrong {
+  border-color: #ff6b6b !important;
+  background: rgba(255, 107, 107, 0.12) !important;
+}
+
+.chip-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.runner-feedback {
+  position: sticky;
+  bottom: 0;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 14.5px;
+}
+
+.fb-correct {
+  background: rgba(55, 214, 122, 0.15);
+  border: 1px solid #37d67a;
+}
+
+.fb-wrong {
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid #ff6b6b;
+}
+
+.fb-text {
+  flex: 1;
+}
+
+.runner-end {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.end-icon {
+  font-size: 54px;
+}
+
+.end-stats {
+  display: flex;
+  gap: 22px;
+  margin: 14px 0 22px;
+}
+
+.end-stat {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 22px;
+  color: var(--muted);
+}
+
+.end-num {
+  display: block;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.input-hint {
+  text-align: center;
+  color: #7fe8ab;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.ear-play {
+  display: block;
+  margin: 0 auto 18px;
+}
+
+.ear-hint {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+/* ---------- Staff glyph ---------- */
+.staff-glyph .staff-line {
+  stroke: #2c2a26;
+  stroke-width: 1.1;
+}
+
+.staff-glyph .staff-notehead {
+  fill: #191713;
+}
+
+.staff-glyph .staff-stem {
+  stroke: #191713;
+  stroke-width: 1.6;
+}
+
+.staff-glyph .staff-clef {
+  font-size: 46px;
+  fill: #191713;
+}
+
+.staff-glyph .staff-clef-treble {
+  font-size: 52px;
+}
+
+.staff-glyph .staff-acc {
+  font-size: 17px;
+  fill: #191713;
+}
+
+.staff-glyph .staff-label {
+  font-size: 13px;
+  font-weight: 700;
+  fill: #6b4fd8;
+}
+
+/* ---------- Keyboard slice ---------- */
+.kb-slice-wrap {
+  overflow-x: auto;
+  display: flex;
+  justify-content: safe center;
+  padding: 4px 2px 8px;
+}
+
+.kb-slice {
+  height: 120px;
+  flex: 0 0 auto;
+}
+
+.kb-slice-label {
+  font-size: 10px;
+  fill: #8d8a84;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------- Timing drill ---------- */
+.timing-glyphs {
+  font-size: 34px;
+  text-align: center;
+  background: var(--score-bg);
+  color: #191713;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+  letter-spacing: 6px;
+}
+
+.timing-beats {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.beat-dot {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--line);
+  font-weight: 700;
+  transition: transform 0.08s, border-color 0.08s;
+}
+
+.beat-countin {
+  opacity: 0.55;
+}
+
+.beat-now {
+  border-color: var(--accent);
+  transform: scale(1.25);
+  background: var(--accent-soft);
+}
+
+.tap-pad {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+  padding: 34px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  border-radius: 18px;
+  border: 3px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.tap-pad:active {
+  transform: scale(0.97);
+  background: var(--accent);
+}
+
+.timing-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.mark {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  border: 1px solid var(--line);
+}
+
+.mark-perfect {
+  border-color: #37d67a;
+  color: #7fe8ab;
+}
+
+.mark-good {
+  border-color: #e8a020;
+  color: #f3c26b;
+}
+
+.mark-miss {
+  border-color: #ff6b6b;
+  color: #ff9a9a;
+}
+
+/* ---------- Cheatsheet ---------- */
+.cheatsheet {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 22px 16px 80px;
+}
+
+.cs-header h1 {
+  margin: 0 0 6px;
+}
+
+.cs-header p {
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+
+.cs-section {
+  margin-top: 30px;
+}
+
+.cs-section h2 {
+  font-size: 17px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+
+.cs-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 720px) {
+  .cs-cols {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.cs-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.cs-card h3 {
+  margin: 0 0 10px;
+}
+
+.cs-card ul {
+  color: var(--muted);
+  font-size: 13.5px;
+  padding-left: 18px;
+}
+
+.cs-card .staff-glyph {
+  background: var(--score-bg);
+  border-radius: 8px;
+  padding: 4px;
+  width: 100%;
+  height: auto;
+  max-height: 150px;
+}
+
+.cs-mnemonic {
+  color: var(--muted);
+  font-size: 13.5px;
+  margin: 6px 0 14px;
+}
+
+.cs-hack {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.cs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.cs-table td,
+.cs-table th {
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.cs-table th {
+  background: var(--bg-2);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.cs-keys {
+  max-width: 420px;
+}
+
+.cs-list {
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.8;
+  padding-left: 20px;
+}
+
+.cs-list strong {
+  color: var(--text);
+}
+
 /* ---------- Narrow screens: compress the top bar ---------- */
 @media (max-width: 700px) {
   .topbar-file {
@@ -577,6 +1345,15 @@ body {
   .topbar {
     gap: 8px;
     padding: 0 10px;
+  }
+
+  .view-tabs .tab-label {
+    display: none;
+  }
+
+  .view-tabs button {
+    padding: 6px 10px;
+    font-size: 16px;
   }
 }
 

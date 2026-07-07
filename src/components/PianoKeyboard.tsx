@@ -40,10 +40,13 @@ function buildKeys(): { keys: KeyGeom[]; width: number } {
   return { keys, width: whiteIndex * WHITE_W };
 }
 
+const KB_PIXEL_HEIGHT: Record<string, number> = { s: 36, m: 52, l: 88, focus: 200 };
+
 export function PianoKeyboard() {
   const selectedMidi = useAppStore((s) => s.selectedMidi);
   const chordMidis = useAppStore((s) => s.chordMidis);
   const activeMidis = useAppStore((s) => s.activeMidis);
+  const keyboardSize = useAppStore((s) => s.keyboardSize);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const { keys, width } = useMemo(buildKeys, []);
@@ -57,9 +60,11 @@ export function PianoKeyboard() {
     const mean = targets.reduce((a, b) => a + b, 0) / targets.length;
     const key = keys.find((k) => k.midi === Math.round(mean)) ?? keys.find((k) => k.midi === targets[0]);
     if (!key) return;
-    const x = key.x - container.clientWidth / 2;
+    // The SVG scales with the chosen keyboard height; convert to pixels.
+    const scale = (KB_PIXEL_HEIGHT[keyboardSize] ?? 52) / WHITE_H;
+    const x = key.x * scale - container.clientWidth / 2;
     container.scrollTo({ left: Math.max(0, x), behavior: 'smooth' });
-  }, [selectedMidi, chordMidis, activeMidis, keys]);
+  }, [selectedMidi, chordMidis, activeMidis, keys, keyboardSize]);
 
   const classFor = (midi: number, black: boolean): string => {
     const cls = [black ? 'kb-black' : 'kb-white'];
@@ -78,8 +83,7 @@ export function PianoKeyboard() {
   return (
     <div className="keyboard-scroll" ref={scrollRef} aria-label="Piano keyboard">
       <svg
-        width={width}
-        height={WHITE_H}
+        style={{ height: `${KB_PIXEL_HEIGHT[keyboardSize] ?? 52}px` }}
         viewBox={`0 0 ${width} ${WHITE_H}`}
         className="keyboard-svg"
         role="img"
