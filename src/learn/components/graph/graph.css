@@ -1,0 +1,440 @@
+/* ============ Constellation graph (force-directed skill tree) ============ */
+
+.constellation {
+  position: relative;
+  height: calc(100dvh - var(--topbar-h) - 118px);
+  min-height: 480px;
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: 22px;
+  overflow: hidden;
+  isolation: isolate;
+  touch-action: none;
+  cursor: grab;
+}
+
+.constellation.cg-hovering {
+  cursor: pointer;
+}
+
+.cg-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.cg-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--rm-muted);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 5px 12px;
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ---------- Links ---------- */
+.cg-link {
+  stroke-linecap: round;
+  transition: opacity 0.25s;
+}
+
+.cg-link.cg-lit {
+  stroke: var(--cg-link);
+  stroke-width: 2.2;
+  filter: drop-shadow(0 0 5px var(--cg-link-glow));
+}
+
+.cg-link.cg-lit.cg-trunk {
+  stroke-width: 3.4;
+}
+
+.cg-link.cg-dim {
+  stroke: var(--rm-dim);
+  stroke-width: 1.4;
+  stroke-dasharray: 3 7;
+  opacity: 0.6;
+}
+
+.cg-link.cg-spoke {
+  opacity: 0.4;
+}
+
+.cg-link.cg-faded {
+  opacity: 0.08;
+}
+
+/* ---------- Nodes ---------- */
+.cg-node {
+  transition: opacity 0.25s;
+}
+
+.cg-node.cg-faded {
+  opacity: 0.16;
+}
+
+.cg-body {
+  stroke-width: 2;
+  transition: r 0.15s;
+}
+
+.cg-halo {
+  fill: var(--unit-color);
+  opacity: 0;
+}
+
+.cg-icon {
+  font-size: 15px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.cg-label {
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--rm-text);
+  paint-order: stroke;
+  stroke: rgba(0, 0, 0, 0.65);
+  stroke-width: 3px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.cg-score-ring {
+  fill: none;
+  stroke: var(--unit-color);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 0 4px var(--unit-color));
+}
+
+/* Root node */
+.cg-root .cg-body {
+  fill: var(--cg-root-fill);
+  stroke: var(--cg-link);
+  filter: drop-shadow(0 0 16px var(--cg-link-glow));
+}
+
+.cg-root .cg-icon {
+  font-size: 26px;
+}
+
+.cg-root .cg-label {
+  font-size: 12px;
+}
+
+/* Unit hubs */
+.cg-hub .cg-body {
+  fill: color-mix(in srgb, var(--unit-color) 26%, var(--rm-orb-fill));
+  stroke: var(--unit-color);
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--unit-color) 65%, transparent));
+}
+
+.cg-hub .cg-icon {
+  font-size: 20px;
+  fill: #fff;
+}
+
+.cg-hub .cg-label {
+  font-size: 12.5px;
+}
+
+.cg-hub.cg-state-locked .cg-body {
+  filter: saturate(0.25) brightness(0.7);
+  stroke: var(--rm-dim);
+}
+
+/* Lessons */
+.cg-lesson .cg-body {
+  fill: var(--rm-orb-fill);
+  stroke: var(--rm-dim);
+}
+
+.cg-lesson .cg-icon {
+  font-size: 12px;
+  fill: var(--rm-muted);
+}
+
+.cg-lesson.cg-state-done .cg-body {
+  fill: color-mix(in srgb, var(--unit-color) 30%, var(--rm-orb-fill));
+  stroke: var(--unit-color);
+  filter: drop-shadow(0 0 9px color-mix(in srgb, var(--unit-color) 60%, transparent));
+}
+
+.cg-lesson.cg-state-done .cg-icon {
+  fill: #fff;
+}
+
+.cg-lesson.cg-state-available .cg-body {
+  fill: var(--unit-color);
+  stroke: #fff;
+  filter: drop-shadow(0 0 14px var(--unit-color));
+}
+
+.cg-lesson.cg-state-available .cg-icon {
+  fill: #fff;
+}
+
+.cg-lesson.cg-state-available .cg-halo {
+  animation: cg-halo-pulse 2.1s ease-in-out infinite;
+}
+
+@keyframes cg-halo-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 0; transform: scale(1.55); }
+}
+
+.cg-lesson.cg-state-locked {
+  opacity: 0.55;
+}
+
+.cg-lesson.cg-state-locked .cg-icon {
+  font-size: 10px;
+}
+
+/* ---------- Theme palettes (backgrounds reuse the rm-* decoration classes) ---------- */
+
+.constellation.theme-aurora {
+  --rm-text: #eef0ff;
+  --rm-muted: #9aa3c7;
+  --rm-dim: #3a4066;
+  --rm-orb-fill: #12142a;
+  --cg-root-fill: #171a36;
+  --cg-link: #8b7bff;
+  --cg-link-glow: rgba(124, 92, 255, 0.55);
+  background:
+    radial-gradient(1200px 600px at 50% -100px, #1b1e3f 0%, transparent 60%),
+    #090b18;
+}
+
+.constellation.theme-synthwave {
+  --rm-text: #ffe9fd;
+  --rm-muted: #c58ad4;
+  --rm-dim: #55286b;
+  --rm-orb-fill: #21063a;
+  --cg-root-fill: #2a0a45;
+  --cg-link: #ff3ed6;
+  --cg-link-glow: rgba(23, 230, 255, 0.6);
+  background: linear-gradient(180deg, #170032 0%, #30074f 55%, #52107a 100%);
+}
+
+.constellation.theme-synthwave .cg-link.cg-lit {
+  stroke: url(#none), #17e6ff;
+  stroke: #17e6ff;
+}
+
+.constellation.theme-synthwave .cg-link.cg-lit.cg-trunk {
+  stroke: #ff3ed6;
+}
+
+.constellation.theme-tree {
+  --rm-text: #f0f5e8;
+  --rm-muted: #9fb59a;
+  --rm-dim: #3c4a38;
+  --rm-orb-fill: #14210f;
+  --cg-root-fill: #1c2b13;
+  --cg-link: #7fc95c;
+  --cg-link-glow: rgba(127, 201, 92, 0.5);
+  background:
+    radial-gradient(900px 500px at 50% -60px, #22371c 0%, transparent 65%),
+    linear-gradient(180deg, #0d160b 0%, #15220f 60%, #1c2b13 100%);
+}
+
+.constellation.theme-tree .cg-link.cg-lit.cg-trunk {
+  stroke: #8a5a34;
+}
+
+/* ---------- Ambient background decorations ---------- */
+
+.rm-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.aurora-blob {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.42;
+  animation: aurora-drift 16s ease-in-out infinite alternate;
+}
+
+.blob-a { top: -8%; left: -22%; background: radial-gradient(closest-side, #7c5cff, transparent 70%); }
+.blob-b { top: 30%; right: -26%; background: radial-gradient(closest-side, #0ea5b7, transparent 70%); animation-delay: -5s; }
+.blob-c { bottom: -12%; left: -18%; background: radial-gradient(closest-side, #c026d3, transparent 70%); animation-delay: -10s; }
+
+@keyframes aurora-drift {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(60px, -40px) scale(1.18); }
+}
+
+.starfield {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1.4px 1.4px at 30px 40px, #fff, transparent),
+    radial-gradient(1px 1px at 120px 130px, #cfd6ff, transparent),
+    radial-gradient(1.8px 1.8px at 200px 60px, #fff, transparent),
+    radial-gradient(1px 1px at 70px 180px, #a8b3ff, transparent),
+    radial-gradient(1.2px 1.2px at 170px 210px, #fff, transparent);
+  background-size: 240px 240px;
+  opacity: 0.55;
+  animation: star-twinkle 5s ease-in-out infinite alternate;
+}
+
+@keyframes star-twinkle {
+  from { opacity: 0.35; }
+  to { opacity: 0.7; }
+}
+
+.synth-sun {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffd76f 0%, #ff7ac3 55%, #ff3ed6 100%);
+  -webkit-mask: repeating-linear-gradient(180deg, #000 0 12px, transparent 13px 17px);
+  mask: repeating-linear-gradient(180deg, #000 0 12px, transparent 13px 17px);
+  filter: drop-shadow(0 0 34px rgba(255, 90, 200, 0.75));
+  animation: sun-breathe 6s ease-in-out infinite alternate;
+  opacity: 0.85;
+}
+
+@keyframes sun-breathe {
+  from { opacity: 0.75; }
+  to { opacity: 0.95; transform: translateX(-50%) scale(1.03); }
+}
+
+.synth-grid {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  bottom: 0;
+  height: 240px;
+  background:
+    repeating-linear-gradient(90deg, rgba(23, 230, 255, 0.5) 0 2px, transparent 2px 46px),
+    repeating-linear-gradient(0deg, rgba(255, 62, 214, 0.5) 0 2px, transparent 2px 38px);
+  transform: perspective(320px) rotateX(58deg);
+  transform-origin: 50% 100%;
+  opacity: 0.3;
+  animation: grid-scroll 2.6s linear infinite;
+  -webkit-mask: linear-gradient(180deg, transparent, #000 45%);
+  mask: linear-gradient(180deg, transparent, #000 45%);
+}
+
+@keyframes grid-scroll {
+  to { background-position: 0 38px, 0 38px; }
+}
+
+.synth-scan {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 4px);
+}
+
+.canopy {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  filter: blur(55px);
+  opacity: 0.5;
+  background: radial-gradient(closest-side, #274b1e, transparent 72%);
+  animation: canopy-sway 14s ease-in-out infinite alternate;
+}
+
+.canopy-a { top: -10%; right: -30%; }
+.canopy-b { bottom: -14%; left: -32%; animation-delay: -7s; }
+
+@keyframes canopy-sway {
+  from { transform: translate(0, 0) rotate(0deg); }
+  to { transform: translate(-34px, 26px) rotate(4deg); }
+}
+
+.fireflies {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(2px 2px at 40px 60px, #d8f277, transparent),
+    radial-gradient(1.5px 1.5px at 150px 140px, #b8e05e, transparent),
+    radial-gradient(2.2px 2.2px at 220px 90px, #eaff9e, transparent),
+    radial-gradient(1.5px 1.5px at 90px 220px, #cdea72, transparent);
+  background-size: 260px 260px;
+  opacity: 0.5;
+  animation: firefly-float 9s ease-in-out infinite alternate;
+}
+
+@keyframes firefly-float {
+  from { opacity: 0.25; background-position: 0 0; }
+  to { opacity: 0.65; background-position: 18px -14px; }
+}
+
+/* ---------- Theme picker ---------- */
+
+.theme-picker {
+  max-width: 900px;
+  margin: 0 auto 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: rgba(18, 20, 32, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.theme-picker .picker-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #9aa1b0;
+  margin-right: 2px;
+}
+
+.theme-picker button {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: #e8eaf0;
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.theme-picker button.picked {
+  background: #7c5cff;
+  border-color: #7c5cff;
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cg-lesson.cg-state-available .cg-halo,
+  .aurora-blob,
+  .starfield,
+  .synth-sun,
+  .synth-grid,
+  .canopy,
+  .fireflies {
+    animation: none !important;
+  }
+}

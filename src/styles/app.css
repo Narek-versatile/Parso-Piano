@@ -704,11 +704,27 @@ body {
   padding: 18px 14px 60px;
 }
 
+.learn-home-graph {
+  max-width: 960px;
+  padding-bottom: 18px;
+}
+
+.theme-picker-inline {
+  margin: 0;
+  padding: 4px 8px;
+}
+
 .learn-stats {
   display: flex;
   gap: 10px;
   justify-content: center;
-  margin-bottom: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.stat-pill {
+  flex: 0 0 auto;
 }
 
 .stat-pill {
