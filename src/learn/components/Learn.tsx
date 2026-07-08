@@ -23,5 +23,7 @@ export function Learn() {
     );
   }
 
-  return <LearnHome progress={progress} onStartLesson={setActiveLessonId} />;
+  return (
+    <LearnHome progress={progress} onStartLesson={setActiveLessonId} onProgressChange={setProgress} />
+  );
 }

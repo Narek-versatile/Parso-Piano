@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Progress } from '../progress';
 import { currentStreak } from '../progress';
 import { ConstellationGraph, type GraphTheme } from './graph/ConstellationGraph';
+import { SyncPanel } from './SyncPanel';
 
 const THEMES: { id: GraphTheme; label: string }[] = [
   { id: 'aurora', label: '🌌 Aurora' },
@@ -23,9 +24,11 @@ function loadTheme(): GraphTheme {
 export function LearnHome({
   progress,
   onStartLesson,
+  onProgressChange,
 }: {
   progress: Progress;
   onStartLesson: (lessonId: string) => void;
+  onProgressChange: (p: Progress) => void;
 }) {
   const [theme, setTheme] = useState<GraphTheme>(loadTheme);
   const streak = currentStreak(progress);
@@ -51,6 +54,7 @@ export function LearnHome({
             </button>
           ))}
         </div>
+        <SyncPanel progress={progress} onImported={onProgressChange} />
       </div>
 
       <ConstellationGraph progress={progress} theme={theme} onStartLesson={onStartLesson} />
